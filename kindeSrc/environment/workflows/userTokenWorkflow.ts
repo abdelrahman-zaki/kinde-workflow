@@ -23,25 +23,11 @@ export const workflowSettings: WorkflowSettings = {
 };
 
 export default async function Workflow(event: onUserTokenGeneratedEvent) {
-    try {
-        const kindeAPI = await createKindeAPI(event);
-        const userId = event.context.user.id;
-        const { data: user } = await kindeAPI.get({
-            endpoint: `user?id=${userId}`,
-        });
-        const orgCodes = user.organizations || [];
+    console.log("Workflow triggered for user:", event.context.user.id);
 
-        // Add organizations array to access token
-        const accessToken = accessTokenCustomClaims<{
-            org_codes: string[];
-        }>();
+    const accessToken = accessTokenCustomClaims<{
+        test: string;
+    }>();
 
-        // Set the organizations array in the access token
-        accessToken.org_codes = orgCodes;
-
-        console.log(`Added ${orgCodes.length} organizations to access token for user ${event.context.user.id}`);
-
-    } catch (error) {
-        console.error("Failed to add organizations to access token:", error);
-    }
+    accessToken.test = "Hello World";
 }
